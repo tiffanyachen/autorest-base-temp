@@ -54,7 +54,7 @@ import retrofit2.http.Query;
 import rx.Observable;
 import rx.functions.Func1;
 
-public interface KeyVaultClientCustom extends KeyVaultClientBase {
+ interface KeyVaultClientCustom extends KeyVaultClientBase {
 
     AzureClient getAzureClient();
 
@@ -213,7 +213,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
     ServiceFuture<KeyBundle> updateKeyAsync(UpdateKeyRequest updateKeyRequest, final ServiceCallback<KeyBundle> serviceCallback);
     
     /**
-     * Gets the public part of a stored key. The get key operation is applicable to all key types. If the requested key is symmetric, then no key material is released in the response. Authorization: Requires the keys/get permission.
+     * Gets the  part of a stored key. The get key operation is applicable to all key types. If the requested key is symmetric, then no key material is released in the response. Authorization: Requires the keys/get permission.
      *
      * @param keyIdentifier The full key identifier
      * 
@@ -222,7 +222,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
     KeyBundle getKey(String keyIdentifier);
 
     /**
-     * Gets the public part of a stored key. The get key operation is applicable to all key types. If the requested key is symmetric, then no key material is released in the response. Authorization: Requires the keys/get permission.
+     * Gets the  part of a stored key. The get key operation is applicable to all key types. If the requested key is symmetric, then no key material is released in the response. Authorization: Requires the keys/get permission.
      *
      * @param keyIdentifier The full key identifier
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
@@ -231,7 +231,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
     ServiceFuture<KeyBundle> getKeyAsync(String keyIdentifier, final ServiceCallback<KeyBundle> serviceCallback);
     
     /**
-     * Gets the public part of a stored key. The get key operation is applicable to all key types. If the requested key is symmetric, then no key material is released in the response. Authorization: Requires the keys/get permission.
+     * Gets the  part of a stored key. The get key operation is applicable to all key types. If the requested key is symmetric, then no key material is released in the response. Authorization: Requires the keys/get permission.
      *
      * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
      * @param keyName The name of the key
@@ -240,7 +240,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
     KeyBundle getKey(String vaultBaseUrl, String keyName);
 
     /**
-     * Gets the public part of a stored key. The get key operation is applicable to all key types. If the requested key is symmetric, then no key material is released in the response. Authorization: Requires the keys/get permission.
+     * Gets the  part of a stored key. The get key operation is applicable to all key types. If the requested key is symmetric, then no key material is released in the response. Authorization: Requires the keys/get permission.
      *
      * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
      * @param keyName The name of the key
@@ -328,42 +328,6 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
     ServiceFuture<List<KeyItem>> listKeysAsync(final String vaultBaseUrl, final Integer maxresults, final ListOperationCallback<KeyItem> serviceCallback);
 
     /**
-     * Requests that a backup of the specified key be downloaded to the client.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param keyName The name of the key
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<BackupKeyResult> backupKeyAsync(String vaultBaseUrl, String keyName, final ServiceCallback<BackupKeyResult> serviceCallback) {
-        return innerKeyVaultClient.backupKeyAsync(vaultBaseUrl, keyName, serviceCallback);
-    }
-
-    /**
-     * Restores the backup key in to a vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param keyBundleBackup the backup blob associated with a key bundle
-     * 
-     * @return the KeyBundle if successful.
-     */
-    public KeyBundle restoreKey(String vaultBaseUrl, byte[] keyBundleBackup) {
-        return innerKeyVaultClient.restoreKey(vaultBaseUrl, keyBundleBackup);
-    }
-
-    /**
-     * Restores the backup key in to a vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param keyBundleBackup the backup blob associated with a key bundle
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<KeyBundle> restoreKeyAsync(String vaultBaseUrl, byte[] keyBundleBackup, final ServiceCallback<KeyBundle> serviceCallback) {
-        return innerKeyVaultClient.restoreKeyAsync(vaultBaseUrl, keyBundleBackup, serviceCallback);
-    }
-
-    /**
      * Encrypts an arbitrary sequence of bytes using an encryption key that is stored in a key vault.
      *
      * @param keyIdentifier The full key identifier
@@ -372,10 +336,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the KeyOperationResult if successful.
      */
-    public KeyOperationResult encrypt(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.encrypt(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value);
-    }
+    KeyOperationResult encrypt(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value);
 
     /**
      * Encrypts an arbitrary sequence of bytes using an encryption key that is stored in a key vault.
@@ -386,10 +347,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<KeyOperationResult> encryptAsync(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.encryptAsync(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value, serviceCallback);
-    }
+    ServiceFuture<KeyOperationResult> encryptAsync(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback);
 
     /**
      * Decrypts a single block of encrypted data.
@@ -400,10 +358,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the KeyOperationResult if successful.
      */
-    public KeyOperationResult decrypt(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.decrypt(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value);
-    }
+    KeyOperationResult decrypt(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value);
 
     /**
      * Decrypts a single block of encrypted data.
@@ -414,10 +369,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses. 
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<KeyOperationResult> decryptAsync(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.decryptAsync(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value, serviceCallback);
-    }
+    ServiceFuture<KeyOperationResult> decryptAsync(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback);
 
     /**
      * Creates a signature from a digest using the specified key.
@@ -428,10 +380,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the KeyOperationResult if successful.
      */
-    public KeyOperationResult sign(String keyIdentifier, JsonWebKeySignatureAlgorithm algorithm, byte[] value) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.sign(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value);
-    }
+     KeyOperationResult sign(String keyIdentifier, JsonWebKeySignatureAlgorithm algorithm, byte[] value);
 
     /**
      * Creates a signature from a digest using the specified key.
@@ -442,10 +391,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<KeyOperationResult> signAsync(String keyIdentifier, JsonWebKeySignatureAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.signAsync(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value, serviceCallback);        
-    }
+     ServiceFuture<KeyOperationResult> signAsync(String keyIdentifier, JsonWebKeySignatureAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback);
 
     /**
      * Verifies a signature using the specified key.
@@ -457,10 +403,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the KeyVerifyResult if successful.
      */
-    public KeyVerifyResult verify(String keyIdentifier, JsonWebKeySignatureAlgorithm algorithm, byte[] digest, byte[] signature) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.verify(id.vault, id.name, id.version == null ? "" : id.version, algorithm, digest, signature);
-    }
+     KeyVerifyResult verify(String keyIdentifier, JsonWebKeySignatureAlgorithm algorithm, byte[] digest, byte[] signature);
 
     /**
      * Verifies a signature using the specified key.
@@ -472,10 +415,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<KeyVerifyResult> verifyAsync(String keyIdentifier, JsonWebKeySignatureAlgorithm algorithm, byte[] digest, byte[] signature, final ServiceCallback<KeyVerifyResult> serviceCallback) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.verifyAsync(id.vault, id.name, id.version == null ? "" : id.version, algorithm, digest, signature, serviceCallback);
-    }
+    ]ServiceFuture<KeyVerifyResult> verifyAsync(String keyIdentifier, JsonWebKeySignatureAlgorithm algorithm, byte[] digest, byte[] signature, final ServiceCallback<KeyVerifyResult> serviceCallback);
 
     /**
      * Wraps a symmetric key using the specified key.
@@ -486,10 +426,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the KeyOperationResult if successful.
      */
-    public KeyOperationResult wrapKey(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.wrapKey(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value);
-    }
+     KeyOperationResult wrapKey(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value);
 
     /**
      * Wraps a symmetric key using the specified key.
@@ -500,10 +437,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<KeyOperationResult> wrapKeyAsync(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.wrapKeyAsync(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value, serviceCallback);
-    }
+     ServiceFuture<KeyOperationResult> wrapKeyAsync(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback);
 
     /**
      * Unwraps a symmetric key using the specified key in the vault that has initially been used for wrapping the key.
@@ -514,10 +448,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the KeyOperationResult if successful.
      */
-    public KeyOperationResult unwrapKey(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.unwrapKey(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value);
-    }
+     KeyOperationResult unwrapKey(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value);
 
     /**
      * Unwraps a symmetric key using the specified key in the vault that has initially been used for wrapping the key.
@@ -528,10 +459,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<KeyOperationResult> unwrapKeyAsync(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback) {
-        KeyIdentifier id = new KeyIdentifier(keyIdentifier);
-        return innerKeyVaultClient.unwrapKeyAsync(id.vault, id.name, id.version == null ? "" : id.version, algorithm, value, serviceCallback);
-    }
+     ServiceFuture<KeyOperationResult> unwrapKeyAsync(String keyIdentifier, JsonWebKeyEncryptionAlgorithm algorithm, byte[] value, final ServiceCallback<KeyOperationResult> serviceCallback);
 
     /**
      * Sets a secret in the specified vault.
@@ -540,16 +468,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the SecretBundle if successful.
      */
-    public SecretBundle setSecret(SetSecretRequest setSecretRequest) {
-        return innerKeyVaultClient.setSecret(
-                setSecretRequest.vaultBaseUrl(), 
-                setSecretRequest.secretName(), 
-                setSecretRequest.value(), 
-                setSecretRequest.tags(), 
-                setSecretRequest.contentType(), 
-                setSecretRequest.secretAttributes());
-    }
-
+     SecretBundle setSecret(SetSecretRequest setSecretRequest);
     /**
      * Sets a secret in the specified vault.
      *
@@ -558,40 +477,8 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<SecretBundle> setSecretAsync(SetSecretRequest setSecretRequest, final ServiceCallback<SecretBundle> serviceCallback) {
-        return innerKeyVaultClient.setSecretAsync(
-                setSecretRequest.vaultBaseUrl(), 
-                setSecretRequest.secretName(), 
-                setSecretRequest.value(), 
-                setSecretRequest.tags(), 
-                setSecretRequest.contentType(), 
-                setSecretRequest.secretAttributes(),
-                serviceCallback);
-    }
+     ServiceFuture<SecretBundle> setSecretAsync(SetSecretRequest setSecretRequest, final ServiceCallback<SecretBundle> serviceCallback);
 
-    /**
-     * Deletes a secret from the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param secretName The name of the secret in the given vault
-     * 
-     * @return the SecretBundle if successful.
-     */
-    public SecretBundle deleteSecret(String vaultBaseUrl, String secretName) {
-        return innerKeyVaultClient.deleteSecret(vaultBaseUrl, secretName);
-    }
-
-    /**
-     * Deletes a secret from the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param secretName The name of the secret in the given vault
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<SecretBundle> deleteSecretAsync(String vaultBaseUrl, String secretName, final ServiceCallback<SecretBundle> serviceCallback) {
-        return innerKeyVaultClient.deleteSecretAsync(vaultBaseUrl, secretName, serviceCallback);
-    }
 
     /**
      * Updates the attributes associated with a specified secret in a given key vault.
@@ -600,15 +487,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the SecretBundle if successful.
      */
-    public SecretBundle updateSecret(UpdateSecretRequest updateSecretRequest) {
-        return innerKeyVaultClient.updateSecret(
-                updateSecretRequest.vaultBaseUrl(), 
-                updateSecretRequest.secretName(),  
-                updateSecretRequest.secretVersion(),
-                updateSecretRequest.contentType(), 
-                updateSecretRequest.secretAttributes(),
-                updateSecretRequest.tags());
-    }
+     SecretBundle updateSecret(UpdateSecretRequest updateSecretRequest);
 
     /**
      * Updates the attributes associated with a specified secret in a given key vault.
@@ -618,17 +497,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<SecretBundle> updateSecretAsync(UpdateSecretRequest updateSecretRequest, final ServiceCallback<SecretBundle> serviceCallback) {
-        return innerKeyVaultClient.updateSecretAsync(
-                updateSecretRequest.vaultBaseUrl(), 
-                updateSecretRequest.secretName(),  
-                updateSecretRequest.secretVersion(),
-                updateSecretRequest.contentType(), 
-                updateSecretRequest.secretAttributes(),
-                updateSecretRequest.tags(), 
-                serviceCallback);
-    }
-
+     ServiceFuture<SecretBundle> updateSecretAsync(UpdateSecretRequest updateSecretRequest, final ServiceCallback<SecretBundle> serviceCallback);
     /**
      * Get a specified secret from a given key vault.
      *
@@ -636,11 +505,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the SecretBundle if successful.
      */
-    public SecretBundle getSecret(String secretIdentifier) {
-        SecretIdentifier id = new SecretIdentifier(secretIdentifier);
-        return innerKeyVaultClient.getSecret(id.vault, id.name, id.version == null ? "" : id.version);
-    }
-
+     SecretBundle getSecret(String secretIdentifier);
     /**
      * Get a specified secret from a given key vault.
      *
@@ -648,10 +513,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<SecretBundle> getSecretAsync(String secretIdentifier, final ServiceCallback<SecretBundle> serviceCallback) {
-        SecretIdentifier id = new SecretIdentifier(secretIdentifier);
-        return innerKeyVaultClient.getSecretAsync(id.vault, id.name, id.version == null ? "" : id.version, serviceCallback);
-    }
+     ServiceFuture<SecretBundle> getSecretAsync(String secretIdentifier, final ServiceCallback<SecretBundle> serviceCallback);
 
     /**
      * Get a specified secret from a given key vault.
@@ -661,9 +523,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the SecretBundle if successful.
      */
-    public SecretBundle getSecret(String vaultBaseUrl, String secretName) {
-        return innerKeyVaultClient.getSecret(vaultBaseUrl, secretName, "");
-    }
+     SecretBundle getSecret(String vaultBaseUrl, String secretName);
 
     /**
      * Get a specified secret from a given key vault.
@@ -673,47 +533,17 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<SecretBundle> getSecretAsync(String vaultBaseUrl, String secretName, final ServiceCallback<SecretBundle> serviceCallback) {
-        return innerKeyVaultClient.getSecretAsync(vaultBaseUrl, secretName, "", serviceCallback);
-    }
+    
+     ServiceFuture<SecretBundle> getSecretAsync(String vaultBaseUrl, String secretName, final ServiceCallback<SecretBundle> serviceCallback);
     
     /**
-     * Get a specified secret from a given key vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param secretName The name of the secret in the given vault
-     * @param secretVersion The version of the secret
-     * 
-     * @return the SecretBundle if successful.
-     */
-    public SecretBundle getSecret(String vaultBaseUrl, String secretName, String secretVersion) {
-        return innerKeyVaultClient.getSecret(vaultBaseUrl, secretName, secretVersion == null ? "" : secretVersion);
-    }
-
-    /**
-     * Get a specified secret from a given key vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param secretName The name of the secret in the given vault
-     * @param secretVersion The version of the secret
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<SecretBundle> getSecretAsync(String vaultBaseUrl, String secretName, String secretVersion, final ServiceCallback<SecretBundle> serviceCallback) {
-        return innerKeyVaultClient.getSecretAsync(vaultBaseUrl, secretName, secretVersion == null ? "" : secretVersion, serviceCallback);
-    }
-
-    /**
      * List secrets in the specified vault.
      *
      * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
      * 
      * @return the PagedList&lt;SecretItem&gt; if successful.
      */
-    public PagedList<SecretItem> listSecrets(final String vaultBaseUrl) {
-        return innerKeyVaultClient.getSecrets(vaultBaseUrl);
-    }
-
+     PagedList<SecretItem> listSecrets(final String vaultBaseUrl);
     /**
      * List secrets in the specified vault.
      *
@@ -721,9 +551,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<SecretItem>> listSecretsAsync(final String vaultBaseUrl, final ListOperationCallback<SecretItem> serviceCallback) {
-        return innerKeyVaultClient.getSecretsAsync(vaultBaseUrl, serviceCallback);
-    }
+     ServiceFuture<List<SecretItem>> listSecretsAsync(final String vaultBaseUrl, final ListOperationCallback<SecretItem> serviceCallback) ;
     /**
      * List secrets in the specified vault.
      *
@@ -732,9 +560,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the PagedList&lt;SecretItem&gt; if successful.
      */
-    public PagedList<SecretItem> listSecrets(final String vaultBaseUrl, final Integer maxresults) {
-        return innerKeyVaultClient.getSecrets(vaultBaseUrl, maxresults);
-    }
+     PagedList<SecretItem> listSecrets(final String vaultBaseUrl, final Integer maxresults);
 
     /**
      * List secrets in the specified vault.
@@ -744,9 +570,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<SecretItem>> listSecretsAsync(final String vaultBaseUrl, final Integer maxresults, final ListOperationCallback<SecretItem> serviceCallback) {
-        return innerKeyVaultClient.getSecretsAsync(vaultBaseUrl, maxresults, serviceCallback);
-    }
+    ServiceFuture<List<SecretItem>> listSecretsAsync(final String vaultBaseUrl, final Integer maxresults, final ListOperationCallback<SecretItem> serviceCallback);
 
     /**
      * List the versions of the specified secret.
@@ -756,9 +580,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the PagedList&lt;SecretItem&gt; if successful.
      */
-    public PagedList<SecretItem> listSecretVersions(final String vaultBaseUrl, final String secretName) {
-        return innerKeyVaultClient.getSecretVersions(vaultBaseUrl, secretName);
-    }
+     PagedList<SecretItem> listSecretVersions(final String vaultBaseUrl, final String secretName);
 
     /**
      * List the versions of the specified secret.
@@ -768,9 +590,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<SecretItem>> listSecretVersionsAsync(final String vaultBaseUrl, final String secretName, final ListOperationCallback<SecretItem> serviceCallback) {
-        return innerKeyVaultClient.getSecretVersionsAsync(vaultBaseUrl, secretName, serviceCallback);
-    }
+     ServiceFuture<List<SecretItem>> listSecretVersionsAsync(final String vaultBaseUrl, final String secretName, final ListOperationCallback<SecretItem> serviceCallback);
     /**
      * List the versions of the specified secret.
      *
@@ -780,9 +600,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the PagedList&lt;SecretItem&gt; if successful.
      */
-    public PagedList<SecretItem> listSecretVersions(final String vaultBaseUrl, final String secretName, final Integer maxresults) {
-        return innerKeyVaultClient.getSecretVersions(vaultBaseUrl, secretName, maxresults);
-    }
+     PagedList<SecretItem> listSecretVersions(final String vaultBaseUrl, final String secretName, final Integer maxresults);
 
     /**
      * List the versions of the specified secret.
@@ -793,9 +611,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<SecretItem>> listSecretVersionsAsync(final String vaultBaseUrl, final String secretName, final Integer maxresults, final ListOperationCallback<SecretItem> serviceCallback) {
-        return innerKeyVaultClient.getSecretVersionsAsync(vaultBaseUrl, secretName, maxresults, serviceCallback);
-    }
+     ServiceFuture<List<SecretItem>> listSecretVersionsAsync(final String vaultBaseUrl, final String secretName, final Integer maxresults, final ListOperationCallback<SecretItem> serviceCallback);
 
     /**
      * List certificates in the specified vault.
@@ -804,9 +620,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the PagedList&lt;CertificateItem&gt; if successful.
      */
-    public PagedList<CertificateItem> listCertificates(final String vaultBaseUrl) {
-        return innerKeyVaultClient.getCertificates(vaultBaseUrl);
-    }
+     PagedList<CertificateItem> listCertificates(final String vaultBaseUrl) ;
 
     /**
      * List certificates in the specified vault.
@@ -815,9 +629,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<CertificateItem>> listCertificatesAsync(final String vaultBaseUrl, final ListOperationCallback<CertificateItem> serviceCallback) {
-        return innerKeyVaultClient.getCertificatesAsync(vaultBaseUrl, serviceCallback);
-    }
+     ServiceFuture<List<CertificateItem>> listCertificatesAsync(final String vaultBaseUrl, final ListOperationCallback<CertificateItem> serviceCallback);
     /**
      * List certificates in the specified vault.
      *
@@ -826,9 +638,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the PagedList&lt;CertificateItem&gt; if successful.
      */
-    public PagedList<CertificateItem> listCertificates(final String vaultBaseUrl, final Integer maxresults) {
-        return innerKeyVaultClient.getCertificates(vaultBaseUrl, maxresults);
-    }
+     PagedList<CertificateItem> listCertificates(final String vaultBaseUrl, final Integer maxresults);
 
     /**
      * List certificates in the specified vault.
@@ -838,101 +648,8 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<CertificateItem>> listCertificatesAsync(final String vaultBaseUrl, final Integer maxresults, final ListOperationCallback<CertificateItem> serviceCallback) {
-        return innerKeyVaultClient.getCertificatesAsync(vaultBaseUrl, maxresults, serviceCallback);
-    }
+     ServiceFuture<List<CertificateItem>> listCertificatesAsync(final String vaultBaseUrl, final Integer maxresults, final ListOperationCallback<CertificateItem> serviceCallback);
 
-    /**
-     * Deletes a certificate from the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate in the given vault
-     * 
-     * @return the CertificateBundle if successful.
-     */
-    public CertificateBundle deleteCertificate(String vaultBaseUrl, String certificateName) {
-        return innerKeyVaultClient.deleteCertificate(vaultBaseUrl, certificateName);
-    }
-
-    /**
-     * Deletes a certificate from the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate in the given vault
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<CertificateBundle> deleteCertificateAsync(String vaultBaseUrl, String certificateName, final ServiceCallback<CertificateBundle> serviceCallback) {
-        return innerKeyVaultClient.deleteCertificateAsync(vaultBaseUrl, certificateName, serviceCallback);
-    }
-
-    /**
-     * Sets the certificate contacts for the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param contacts The contacts for the vault certificates.
-     * 
-     * @return the Contacts if successful.
-     */
-    public Contacts setCertificateContacts(String vaultBaseUrl, Contacts contacts) {
-        return innerKeyVaultClient.setCertificateContacts(vaultBaseUrl, contacts);
-    }
-
-    /**
-     * Sets the certificate contacts for the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param contacts The contacts for the vault certificates.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Contacts> setCertificateContactsAsync(String vaultBaseUrl, Contacts contacts, final ServiceCallback<Contacts> serviceCallback) {
-        return innerKeyVaultClient.setCertificateContactsAsync(vaultBaseUrl, contacts, serviceCallback);
-    }
-
-    /**
-     * Gets the certificate contacts for the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * 
-     * @return the Contacts if successful.
-     */
-    public Contacts getCertificateContacts(String vaultBaseUrl) {
-        return innerKeyVaultClient.getCertificateContacts(vaultBaseUrl);
-    }
-
-    /**
-     * Gets the certificate contacts for the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Contacts> getCertificateContactsAsync(String vaultBaseUrl, final ServiceCallback<Contacts> serviceCallback) {
-        return innerKeyVaultClient.getCertificateContactsAsync(vaultBaseUrl, serviceCallback);
-    }
-
-    /**
-     * Deletes the certificate contacts for the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * 
-     * @return the Contacts if successful.
-     */
-    public Contacts deleteCertificateContacts(String vaultBaseUrl) {
-        return innerKeyVaultClient.deleteCertificateContacts(vaultBaseUrl);
-    }
-
-    /**
-     * Deletes the certificate contacts for the specified vault.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<Contacts> deleteCertificateContactsAsync(String vaultBaseUrl, final ServiceCallback<Contacts> serviceCallback) {
-        return innerKeyVaultClient.deleteCertificateContactsAsync(vaultBaseUrl, serviceCallback);
-    }
 
     /**
      * List certificate issuers for the specified vault.
@@ -941,9 +658,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the PagedList&lt;CertificateIssuerItem&gt; if successful.
      */
-    public PagedList<CertificateIssuerItem> listCertificateIssuers(final String vaultBaseUrl) {
-        return innerKeyVaultClient.getCertificateIssuers(vaultBaseUrl);
-    }
+     PagedList<CertificateIssuerItem> listCertificateIssuers(final String vaultBaseUrl);
 
     /**
      * List certificate issuers for the specified vault.
@@ -952,9 +667,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<CertificateIssuerItem>> listCertificateIssuersAsync(final String vaultBaseUrl, final ListOperationCallback<CertificateIssuerItem> serviceCallback) {
-        return innerKeyVaultClient.getCertificateIssuersAsync(vaultBaseUrl, serviceCallback);
-    }
+     ServiceFuture<List<CertificateIssuerItem>> listCertificateIssuersAsync(final String vaultBaseUrl, final ListOperationCallback<CertificateIssuerItem> serviceCallback);
     /**
      * List certificate issuers for the specified vault.
      *
@@ -963,9 +676,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the PagedList&lt;CertificateIssuerItem&gt; if successful.
      */
-    public PagedList<CertificateIssuerItem> listCertificateIssuers(final String vaultBaseUrl, final Integer maxresults) {
-        return innerKeyVaultClient.getCertificateIssuers(vaultBaseUrl, maxresults);
-    }
+     PagedList<CertificateIssuerItem> listCertificateIssuers(final String vaultBaseUrl, final Integer maxresults);
 
     /**
      * List certificate issuers for the specified vault.
@@ -975,9 +686,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<CertificateIssuerItem>> listCertificateIssuersAsync(final String vaultBaseUrl, final Integer maxresults, final ListOperationCallback<CertificateIssuerItem> serviceCallback) {
-        return innerKeyVaultClient.getCertificateIssuersAsync(vaultBaseUrl, maxresults, serviceCallback);
-    }
+     ServiceFuture<List<CertificateIssuerItem>> listCertificateIssuersAsync(final String vaultBaseUrl, final Integer maxresults, final ListOperationCallback<CertificateIssuerItem> serviceCallback);
 
     /**
      * Sets the certificate contacts for the specified vault.
@@ -986,15 +695,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the IssuerBundle if successful.
      */
-    public IssuerBundle setCertificateIssuer(SetCertificateIssuerRequest setCertificateIssuerRequest) {
-        return innerKeyVaultClient.setCertificateIssuer(
-                setCertificateIssuerRequest.vaultBaseUrl(), 
-                setCertificateIssuerRequest.issuerName(),
-                setCertificateIssuerRequest.provider(),
-                setCertificateIssuerRequest.credentials(),
-                setCertificateIssuerRequest.organizationDetails(),
-                setCertificateIssuerRequest.attributes());
-    }
+     IssuerBundle setCertificateIssuer(SetCertificateIssuerRequest setCertificateIssuerRequest);
 
     /**
      * Sets the certificate contacts for the specified vault.
@@ -1004,16 +705,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<IssuerBundle> setCertificateIssuerAsync(SetCertificateIssuerRequest setCertificateIssuerRequest, final ServiceCallback<IssuerBundle> serviceCallback) {
-        return innerKeyVaultClient.setCertificateIssuerAsync(
-                setCertificateIssuerRequest.vaultBaseUrl(), 
-                setCertificateIssuerRequest.issuerName(), 
-                setCertificateIssuerRequest.provider(),
-                setCertificateIssuerRequest.credentials(),
-                setCertificateIssuerRequest.organizationDetails(),
-                setCertificateIssuerRequest.attributes(),
-                serviceCallback);
-    }
+     ServiceFuture<IssuerBundle> setCertificateIssuerAsync(SetCertificateIssuerRequest setCertificateIssuerRequest, final ServiceCallback<IssuerBundle> serviceCallback);
 
     /**
      * Updates the specified certificate issuer.
@@ -1022,15 +714,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the IssuerBundle if successful.
      */
-    public IssuerBundle updateCertificateIssuer(UpdateCertificateIssuerRequest updateCertificateIssuerRequest) {
-        return innerKeyVaultClient.updateCertificateIssuer(
-                updateCertificateIssuerRequest.vaultBaseUrl(), 
-                updateCertificateIssuerRequest.issuerName(),
-                updateCertificateIssuerRequest.provider(),
-                updateCertificateIssuerRequest.credentials(),
-                updateCertificateIssuerRequest.organizationDetails(),
-                updateCertificateIssuerRequest.attributes());
-    }
+     IssuerBundle updateCertificateIssuer(UpdateCertificateIssuerRequest updateCertificateIssuerRequest);
 
     /**
      * Updates the specified certificate issuer.
@@ -1041,64 +725,9 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<IssuerBundle> updateCertificateIssuerAsync(UpdateCertificateIssuerRequest updateCertificateIssuerRequest, final ServiceCallback<IssuerBundle> serviceCallback) {
-        return innerKeyVaultClient.updateCertificateIssuerAsync(
-                updateCertificateIssuerRequest.vaultBaseUrl(), 
-                updateCertificateIssuerRequest.issuerName(),
-                updateCertificateIssuerRequest.provider(),
-                updateCertificateIssuerRequest.credentials(),
-                updateCertificateIssuerRequest.organizationDetails(),
-                updateCertificateIssuerRequest.attributes(),
-                serviceCallback);
-    }
+     ServiceFuture<IssuerBundle> updateCertificateIssuerAsync(UpdateCertificateIssuerRequest updateCertificateIssuerRequest, final ServiceCallback<IssuerBundle> serviceCallback);
 
-    /**
-     * Gets the specified certificate issuer.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param issuerName The name of the issuer.
-     * 
-     * @return the IssuerBundle if successful.
-     */
-    public IssuerBundle getCertificateIssuer(String vaultBaseUrl, String issuerName) {
-        return innerKeyVaultClient.getCertificateIssuer(vaultBaseUrl, issuerName);
-    }
 
-    /**
-     * Gets the specified certificate issuer.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param issuerName The name of the issuer.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<IssuerBundle> getCertificateIssuerAsync(String vaultBaseUrl, String issuerName, final ServiceCallback<IssuerBundle> serviceCallback) {
-        return innerKeyVaultClient.getCertificateIssuerAsync(vaultBaseUrl, issuerName, serviceCallback);    
-    }
-
-    /**
-     * Deletes the specified certificate issuer.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param issuerName The name of the issuer.
-     * 
-     * @return the IssuerBundle if successful.
-     */
-    public IssuerBundle deleteCertificateIssuer(String vaultBaseUrl, String issuerName) {
-        return innerKeyVaultClient.deleteCertificateIssuer(vaultBaseUrl, issuerName);
-    }
-
-    /**
-     * Deletes the specified certificate issuer.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param issuerName The name of the issuer.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<IssuerBundle> deleteCertificateIssuerAsync(String vaultBaseUrl, String issuerName, final ServiceCallback<IssuerBundle> serviceCallback) {
-        return innerKeyVaultClient.deleteCertificateIssuerAsync(vaultBaseUrl, issuerName, serviceCallback);
-    }
 
     /**
      * Creates a new certificate version. If this is the first version, the certificate resource is created.
@@ -1107,14 +736,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the CertificateOperation if successful.
      */
-    public CertificateOperation createCertificate(CreateCertificateRequest createCertificateRequest) {
-        return innerKeyVaultClient.createCertificate(
-                createCertificateRequest.vaultBaseUrl(), 
-                createCertificateRequest.certificateName(), 
-                createCertificateRequest.certificatePolicy(), 
-                createCertificateRequest.certificateAttributes(), 
-                createCertificateRequest.tags());
-    }
+     CertificateOperation createCertificate(CreateCertificateRequest createCertificateRequest);
 
     /**
      * Creates a new certificate version. If this is the first version, the certificate resource is created.
@@ -1124,15 +746,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<CertificateOperation> createCertificateAsync(CreateCertificateRequest createCertificateRequest, final ServiceCallback<CertificateOperation> serviceCallback) {
-        return innerKeyVaultClient.createCertificateAsync(
-                createCertificateRequest.vaultBaseUrl(), 
-                createCertificateRequest.certificateName(), 
-                createCertificateRequest.certificatePolicy(), 
-                createCertificateRequest.certificateAttributes(), 
-                createCertificateRequest.tags(), 
-                serviceCallback);
-    }
+     ServiceFuture<CertificateOperation> createCertificateAsync(CreateCertificateRequest createCertificateRequest, final ServiceCallback<CertificateOperation> serviceCallback);
 
     /**
      * Imports a certificate into the specified vault.
@@ -1141,16 +755,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the CertificateBundle if successful.
      */
-    public CertificateBundle importCertificate(ImportCertificateRequest importCertificateRequest) {
-        return innerKeyVaultClient.importCertificate(
-                importCertificateRequest.vaultBaseUrl(), 
-                importCertificateRequest.certificateName(), 
-                importCertificateRequest.base64EncodedCertificate(),
-                importCertificateRequest.password(), 
-                importCertificateRequest.certificatePolicy(), 
-                importCertificateRequest.certificateAttributes(), 
-                importCertificateRequest.tags());
-    }
+     CertificateBundle importCertificate(ImportCertificateRequest importCertificateRequest);
 
     /**
      * Imports a certificate into the specified vault.
@@ -1160,17 +765,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<CertificateBundle> importCertificateAsync(ImportCertificateRequest importCertificateRequest, final ServiceCallback<CertificateBundle> serviceCallback) {
-        return innerKeyVaultClient.importCertificateAsync(
-                importCertificateRequest.vaultBaseUrl(), 
-                importCertificateRequest.certificateName(), 
-                importCertificateRequest.base64EncodedCertificate(), 
-                importCertificateRequest.password(), 
-                importCertificateRequest.certificatePolicy(), 
-                importCertificateRequest.certificateAttributes(), 
-                importCertificateRequest.tags(), 
-                serviceCallback);
-    }
+     ServiceFuture<CertificateBundle> importCertificateAsync(ImportCertificateRequest importCertificateRequest, final ServiceCallback<CertificateBundle> serviceCallback);
     
     /**
      * List the versions of a certificate.
@@ -1180,9 +775,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the PagedList&lt;CertificateItem&gt; if successful.
      */
-    public PagedList<CertificateItem> listCertificateVersions(final String vaultBaseUrl, final String certificateName) {
-        return innerKeyVaultClient.getCertificateVersions(vaultBaseUrl, certificateName);
-    }
+     PagedList<CertificateItem> listCertificateVersions(final String vaultBaseUrl, final String certificateName);
 
     /**
      * List the versions of a certificate.
@@ -1192,9 +785,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<CertificateItem>> listCertificateVersionsAsync(final String vaultBaseUrl, final String certificateName, final ListOperationCallback<CertificateItem> serviceCallback) {
-        return innerKeyVaultClient.getCertificateVersionsAsync(vaultBaseUrl, certificateName, serviceCallback);        
-    }
+     ServiceFuture<List<CertificateItem>> listCertificateVersionsAsync(final String vaultBaseUrl, final String certificateName, final ListOperationCallback<CertificateItem> serviceCallback);
     /**
      * List the versions of a certificate.
      *
@@ -1204,9 +795,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the PagedList&lt;CertificateItem&gt; if successful.
      */
-    public PagedList<CertificateItem> listCertificateVersions(final String vaultBaseUrl, final String certificateName, final Integer maxresults) {
-        return innerKeyVaultClient.getCertificateVersions(vaultBaseUrl, certificateName, maxresults);
-    }
+     PagedList<CertificateItem> listCertificateVersions(final String vaultBaseUrl, final String certificateName, final Integer maxresults);
 
     /**
      * List the versions of a certificate.
@@ -1217,33 +806,9 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<CertificateItem>> listCertificateVersionsAsync(final String vaultBaseUrl, final String certificateName, final Integer maxresults, final ListOperationCallback<CertificateItem> serviceCallback) {
-        return innerKeyVaultClient.getCertificateVersionsAsync(vaultBaseUrl, certificateName, maxresults, serviceCallback);
-    }
+     ServiceFuture<List<CertificateItem>> listCertificateVersionsAsync(final String vaultBaseUrl, final String certificateName, final Integer maxresults, final ListOperationCallback<CertificateItem> serviceCallback);
 
-    /**
-     * Gets the policy for a certificate.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate in the given vault.
-     * 
-     * @return the CertificatePolicy if successful.
-     */
-    public CertificatePolicy getCertificatePolicy(String vaultBaseUrl, String certificateName) {
-        return innerKeyVaultClient.getCertificatePolicy(vaultBaseUrl, certificateName);
-    }
-
-    /**
-     * Gets the policy for a certificate.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate in the given vault.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<CertificatePolicy> getCertificatePolicyAsync(String vaultBaseUrl, String certificateName, final ServiceCallback<CertificatePolicy> serviceCallback) {
-        return innerKeyVaultClient.getCertificatePolicyAsync(vaultBaseUrl, certificateName, serviceCallback);
-    }
+    
 
     /**
      * Updates the policy for a certificate. Set appropriate members in the certificatePolicy that must be updated. Leave others as null.
@@ -1252,12 +817,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the CertificatePolicy if successful.
      */
-    public CertificatePolicy updateCertificatePolicy(UpdateCertificatePolicyRequest updateCertificatePolicyRequest) {
-        return innerKeyVaultClient.updateCertificatePolicy(
-                updateCertificatePolicyRequest.vaultBaseUrl(), 
-                updateCertificatePolicyRequest.certificateName(), 
-                updateCertificatePolicyRequest.certificatePolicy());
-    }
+     CertificatePolicy updateCertificatePolicy(UpdateCertificatePolicyRequest updateCertificatePolicyRequest);
 
     /**
      * Updates the policy for a certificate. Set appropriate members in the certificatePolicy that must be updated. Leave others as null.
@@ -1267,13 +827,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<CertificatePolicy> updateCertificatePolicyAsync(UpdateCertificatePolicyRequest updateCertificatePolicyRequest, final ServiceCallback<CertificatePolicy> serviceCallback) {
-        return innerKeyVaultClient.updateCertificatePolicyAsync(
-                updateCertificatePolicyRequest.vaultBaseUrl(), 
-                updateCertificatePolicyRequest.certificateName(), 
-                updateCertificatePolicyRequest.certificatePolicy(), 
-                serviceCallback);
-    }
+     ServiceFuture<CertificatePolicy> updateCertificatePolicyAsync(UpdateCertificatePolicyRequest updateCertificatePolicyRequest, final ServiceCallback<CertificatePolicy> serviceCallback);
 
     /**
      * Updates the attributes associated with the specified certificate.
@@ -1282,16 +836,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the CertificateBundle if successful.
      */
-    public CertificateBundle updateCertificate(UpdateCertificateRequest updateCertificateRequest) {
-        return innerKeyVaultClient.updateCertificate(
-                updateCertificateRequest.vaultBaseUrl(), 
-                updateCertificateRequest.certificateName(),
-                updateCertificateRequest.certificateVersion(),
-                updateCertificateRequest.certificatePolicy(), 
-                updateCertificateRequest.certificateAttributes(), 
-                updateCertificateRequest.tags());
-    }
-
+     CertificateBundle updateCertificate(UpdateCertificateRequest updateCertificateRequest);
     /**
      * Updates the attributes associated with the specified certificate.
      *
@@ -1300,16 +845,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<CertificateBundle> updateCertificateAsync(UpdateCertificateRequest updateCertificateRequest, final ServiceCallback<CertificateBundle> serviceCallback) {
-        return innerKeyVaultClient.updateCertificateAsync(
-                updateCertificateRequest.vaultBaseUrl(), 
-                updateCertificateRequest.certificateName(), 
-                updateCertificateRequest.certificateVersion(),
-                updateCertificateRequest.certificatePolicy(), 
-                updateCertificateRequest.certificateAttributes(), 
-                updateCertificateRequest.tags(), 
-                serviceCallback);
-    }
+     ServiceFuture<CertificateBundle> updateCertificateAsync(UpdateCertificateRequest updateCertificateRequest, final ServiceCallback<CertificateBundle> serviceCallback);
     
     /**
      * Gets information about a specified certificate.
@@ -1318,10 +854,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the CertificateBundle if successful.
      */
-    public CertificateBundle getCertificate(String certificateIdentifier) {
-        CertificateIdentifier id = new CertificateIdentifier(certificateIdentifier); 
-        return innerKeyVaultClient.getCertificate(id.vault, id.name, id.version == null ? "" : id.version);
-    }
+     CertificateBundle getCertificate(String certificateIdentifier);
 
     /**
      * Gets information about a specified certificate.
@@ -1330,10 +863,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<CertificateBundle> getCertificateAsync(String certificateIdentifier, final ServiceCallback<CertificateBundle> serviceCallback) {
-        CertificateIdentifier id = new CertificateIdentifier(certificateIdentifier);
-        return innerKeyVaultClient.getCertificateAsync(id.vault, id.name, id.version == null ? "" : id.version, serviceCallback);
-    }
+     ServiceFuture<CertificateBundle> getCertificateAsync(String certificateIdentifier, final ServiceCallback<CertificateBundle> serviceCallback);
     
     /**
      * Gets information about a specified certificate.
@@ -1343,35 +873,11 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the CertificateBundle if successful.
      */
-    public CertificateBundle getCertificate(String vaultBaseUrl, String certificateName) {
+     CertificateBundle getCertificate(String vaultBaseUrl, String certificateName) {
         return innerKeyVaultClient.getCertificate(vaultBaseUrl, certificateName, "");
     }
 
-    /**
-     * Gets information about a specified certificate.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate in the given vault
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<CertificateBundle> getCertificateAsync(String vaultBaseUrl, String certificateName, final ServiceCallback<CertificateBundle> serviceCallback) {
-        return innerKeyVaultClient.getCertificateAsync(vaultBaseUrl, certificateName, "", serviceCallback);
-    }
-    
-    /**
-     * Gets information about a specified certificate.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate in the given vault
-     * @param certificateVersion The version of the certificate
-     * 
-     * @return the CertificateBundle if successful.
-     */
-    public CertificateBundle getCertificate(String vaultBaseUrl, String certificateName, String certificateVersion) {
-        return innerKeyVaultClient.getCertificate(vaultBaseUrl, certificateName, certificateVersion);
-    }
-
+   
     /**
      * Gets information about a specified certificate.
      *
@@ -1381,7 +887,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<CertificateBundle> getCertificateAsync(String vaultBaseUrl, String certificateName, String certificateVersion, final ServiceCallback<CertificateBundle> serviceCallback) {
+     ServiceFuture<CertificateBundle> getCertificateAsync(String vaultBaseUrl, String certificateName, String certificateVersion, final ServiceCallback<CertificateBundle> serviceCallback) {
         return innerKeyVaultClient.getCertificateAsync(vaultBaseUrl, certificateName, certificateVersion, serviceCallback);
     }
 
@@ -1392,12 +898,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the CertificateOperation if successful.
      */
-    public CertificateOperation updateCertificateOperation(UpdateCertificateOperationRequest updateCertificateOperationRequest) {
-        return innerKeyVaultClient.updateCertificateOperation(
-                updateCertificateOperationRequest.vaultBaseUrl(), 
-                updateCertificateOperationRequest.certificateName(), 
-                updateCertificateOperationRequest.cancellationRequested());
-    }
+     CertificateOperation updateCertificateOperation(UpdateCertificateOperationRequest updateCertificateOperationRequest);
 
     /**
      * Updates a certificate operation.
@@ -1407,62 +908,10 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<CertificateOperation> updateCertificateOperationAsync(UpdateCertificateOperationRequest updateCertificateOperationRequest, final ServiceCallback<CertificateOperation> serviceCallback) {
-        return innerKeyVaultClient.updateCertificateOperationAsync(
-                updateCertificateOperationRequest.vaultBaseUrl(), 
-                updateCertificateOperationRequest.certificateName(), 
-                updateCertificateOperationRequest.cancellationRequested(),
-                serviceCallback);
-    }
+     ServiceFuture<CertificateOperation> updateCertificateOperationAsync(UpdateCertificateOperationRequest updateCertificateOperationRequest, final ServiceCallback<CertificateOperation> serviceCallback);
 
-    /**
-     * Gets the operation associated with a specified certificate.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate
-     * 
-     * @return the CertificateOperation if successful.
-     */
-    public CertificateOperation getCertificateOperation(String vaultBaseUrl, String certificateName) {
-        return innerKeyVaultClient.getCertificateOperation(vaultBaseUrl, certificateName);
-    }
 
-    /**
-     * Gets the operation associated with a specified certificate.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<CertificateOperation> getCertificateOperationAsync(String vaultBaseUrl, String certificateName, final ServiceCallback<CertificateOperation> serviceCallback) {
-        return innerKeyVaultClient.getCertificateOperationAsync(vaultBaseUrl, certificateName, serviceCallback);
-    }
-
-    /**
-     * Deletes the operation for a specified certificate.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate
-     * 
-     * @return the CertificateOperation if successful.
-     */
-    public CertificateOperation deleteCertificateOperation(String vaultBaseUrl, String certificateName) {
-        return innerKeyVaultClient.deleteCertificateOperation(vaultBaseUrl, certificateName);
-    }
-
-    /**
-     * Deletes the operation for a specified certificate.
-     *
-     * @param vaultBaseUrl The vault name, e.g. https://myvault.vault.azure.net
-     * @param certificateName The name of the certificate
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<CertificateOperation> deleteCertificateOperationAsync(String vaultBaseUrl, String certificateName, final ServiceCallback<CertificateOperation> serviceCallback) {
-        return innerKeyVaultClient.deleteCertificateOperationAsync(vaultBaseUrl, certificateName, serviceCallback);
-    }
-
+    
     /**
      * Merges a certificate or a certificate chain with a key pair existing on the server.
      *
@@ -1470,14 +919,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the CertificateBundle if successful.
      */
-    public CertificateBundle mergeCertificate(MergeCertificateRequest mergeCertificateRequest) {
-        return innerKeyVaultClient.mergeCertificate(
-                mergeCertificateRequest.vaultBaseUrl(), 
-                mergeCertificateRequest.certificateName(), 
-                mergeCertificateRequest.x509Certificates(), 
-                mergeCertificateRequest.certificateAttributes(), 
-                mergeCertificateRequest.tags());
-    }
+     CertificateBundle mergeCertificate(MergeCertificateRequest mergeCertificateRequest);
 
     /**
      * Merges a certificate or a certificate chain with a key pair existing on the server.
@@ -1487,15 +929,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<CertificateBundle> mergeCertificateAsync(MergeCertificateRequest mergeCertificateRequest, final ServiceCallback<CertificateBundle> serviceCallback) {
-        return innerKeyVaultClient.mergeCertificateAsync(
-                mergeCertificateRequest.vaultBaseUrl(), 
-                mergeCertificateRequest.certificateName(), 
-                mergeCertificateRequest.x509Certificates(), 
-                mergeCertificateRequest.certificateAttributes(), 
-                mergeCertificateRequest.tags(), 
-                serviceCallback);
-    }
+     ServiceFuture<CertificateBundle> mergeCertificateAsync(MergeCertificateRequest mergeCertificateRequest, final ServiceCallback<CertificateBundle> serviceCallback);
 
 
     /**
@@ -1506,10 +940,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * 
      * @return the String if successful.
      */
-    public String getPendingCertificateSigningRequest(String vaultBaseUrl, String certificateName) {
-        return getPendingCertificateSigningRequestWithServiceResponseAsync(vaultBaseUrl, certificateName).toBlocking().single().body();
-    }
-
+     String getPendingCertificateSigningRequest(String vaultBaseUrl, String certificateName);
     /**
      * Gets the pending certificate signing request response.
      *
@@ -1518,9 +949,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<String> getPendingCertificateSigningRequestAsync(String vaultBaseUrl, String certificateName, final ServiceCallback<String> serviceCallback) {
-        return ServiceFuture.fromResponse(getPendingCertificateSigningRequestWithServiceResponseAsync(vaultBaseUrl, certificateName), serviceCallback);
-    }
+     ServiceFuture<String> getPendingCertificateSigningRequestAsync(String vaultBaseUrl, String certificateName, final ServiceCallback<String> serviceCallback);
     
     /**
      * Gets the pending certificate signing request response.
@@ -1529,29 +958,7 @@ public interface KeyVaultClientCustom extends KeyVaultClientBase {
      * @param certificateName The name of the certificate
      * @return the observable to the String object
      */
-    private Observable<ServiceResponse<String>> getPendingCertificateSigningRequestWithServiceResponseAsync(String vaultBaseUrl, String certificateName) {
-        if (vaultBaseUrl == null) {
-            throw new IllegalArgumentException("Parameter vaultBaseUrl is required and cannot be null.");
-        }
-        if (certificateName == null) {
-            throw new IllegalArgumentException("Parameter certificateName is required and cannot be null.");
-        }
-        if (this.apiVersion() == null) {
-            throw new IllegalArgumentException("Parameter this.apiVersion() is required and cannot be null.");
-        }
-        String parameterizedHost = Joiner.on(", ").join("{vaultBaseUrl}", vaultBaseUrl);
-        return service.getPendingCertificateSigningRequest(certificateName, this.apiVersion(), this.acceptLanguage(), parameterizedHost, this.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<String>>>() {
-                @Override
-                public Observable<ServiceResponse<String>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<String> clientResponse =  new ServiceResponse<String>(response.body().string(), response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+    private Observable<ServiceResponse<String>> getPendingCertificateSigningRequestWithServiceResponseAsync(String vaultBaseUrl, String certificateName);
     }
 
 }
